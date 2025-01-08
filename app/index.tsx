@@ -1,34 +1,41 @@
 import React, { useState } from 'react'
-import { StyleSheet } from 'react-native'
-import { Text, theme, withGalio, GalioProvider } from 'galio-framework'
+import { View, Text, StyleSheet } from 'react-native'
+import { withGalio, GalioProvider, ThemeType } from 'galio-framework'
 
-type Theme = {
-  COLORS: {
-    FACEBOOK: string
-  }
+const customTheme = {
+  SIZES: { BASE: 18, },
+  // this will overwrite the Galio SIZES BASE value 16
+  COLORS: { PRIMARY: 'red', FACEBOOK: '#3B5998' } 
+  // this will overwrite the Galio COLORS PRIMARY color #B23AFC
+};
+
+interface IndexProps {
+  styles: {
+    container: {
+      flex: number,
+      backgroundColor: string
+    }
+  }  
 }
 
-function Index() {
 
-  const customTheme = {
-    SIZES: { BASE: 18, },
-    // this will overwrite the Galio SIZES BASE value 16
-    COLORS: { PRIMARY: 'red', } 
-    // this will overwrite the Galio COLORS PRIMARY color #B23AFC
-  };
-
-
+function Index({ styles }: IndexProps) {
     return ( 
-    <GalioProvider theme={customTheme}>
-      <Text>Olá, mundo</Text>
-    </GalioProvider> )
-  
+      <GalioProvider theme={customTheme}>
+        <View style={styles.container}>
+          <Text>Olá, mundo</Text>
+        </View>
+      </GalioProvider> 
+    );
 }
-const styles = (theme: Theme) => StyleSheet.create<{ container: { flex: number; backgroundColor: string }}>({
+
+const createSyles = (theme: ThemeType)  => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:  theme.COLORS.FACEBOOK
+    backgroundColor: theme.COLORS?.FACEBOOK || 'white'
   }
 });
 
-export default withGalio(Index, styles)
+// const styles = createSyles(customTheme) 
+
+export default withGalio(Index, createSyles)
